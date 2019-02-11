@@ -179,13 +179,13 @@ C:\> netstat -f
 			GUI-2-CMD
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
-Local User Mgr				--->	C:\> lusrmgr
-Services Control Panel		--->	C:\> services
-Task Mgr					--->	C:\> taskmgr
-Task Scheduler				--->	C:\> taskschd
-Security Policy Mgr			--->	C:\> secpol
-Event Viewer				--->	C:\> eventvwr
-Control Panel				--->	C:\> control
+Local User Mgr              --->  C:\> lusrmgr
+Services Control Panel      --->  C:\> services
+Task Mgr                    --->  C:\> taskmgr
+Task Scheduler              --->  C:\> taskschd
+Security Policy Mgr         --->  C:\> secpol
+Event Viewer                --->  C:\> eventvwr
+Control Panel               --->  C:\> control
 
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
