@@ -1,0 +1,200 @@
+#!/home/b1nary0mega/WinCheatSheet
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+			Process & Service
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+Query brief status of all services
+C:\> sc query
+
+Query the config of specific service
+C:\> sc qc [servicename]
+
+List all processes currently running
+C:\> tasklist
+
+List all processes currntly running and the DLLs each loaded
+C:\> tasklist /m
+
+List all processes running which have specified [dll] loaded
+C:\> tasklist /m [dll]
+
+Get task information on [PID]
+C:\> tasklist /FI "PID eq [PID]"
+
+Get all loaded DLLs for [PID]
+C:\> tasklist /m /FI "PID eq [PID]"
+
+Get all "running" processes not run as "NT Authority\System"
+C:\> tasklist /FI "USERNAME ne NT AUTHORITY\SYSTEM" /FI "STATUS eq running"
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+			WMIC
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+Fundamental grammar
+C:\> wmic [alias] [where clause] [verb clause]
+
+- useful [aliases]
+	proces 		service
+	share		nicconfig
+	startup		useraccount
+	qfe (quick fix engineering - show patches)
+
+Example [where clause]
+	where name="nc.exe"
+	where (commandline like "%stuff")
+	where (name="cmd.exe" and parrentprocessid!="[pid]")
+
+Example [verb clause]
+	list [full|brief]
+	get [attrib1,attrib2...]
+	call [method]
+	delete
+
+List all attributes of [alias]
+C:\> wmic [alias] get /?
+
+List all callable methods of [alias]
+C:\> wmic [alias] call /?
+
+Example
+C:\> wmic process list full
+
+Make WMIC effect remote [TargetIPaddr]
+C:\> wmic /node:[TargetIPaddr] /usr:[user] /password:[passwd] process list full
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+			Registry
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+Add a key to the registry on machine [TargetIPaddr] within the registry domain
+[RegDomain] to location [Key]. If no remote machine is specified the current is
+used
+C:\> reg add [\\TargetIPaddr\][RegDomain]\[Key]
+
+
+***Imports and Exports can only be done locally***
+
+Export all subkeys and values located in the domain [RegDomain] at location
+[Key] to [FileName]
+C:\> reg export [RegDomain]\[Key] [FileName]
+
+Import all registry entries from [FileName]
+C:\> reg import [FileName]
+
+Query a key on [TargetIPaddr] within [RegDomain] in location [Key] and get
+[ValueName] under the key. (Add /s to recurse all values).
+C:\> reg query [\\TargetIPaddr]\[RegDomain]\[Key] /v [ValueName]
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+			Shutdown / Restart
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+Shutdown NOW! (0 can be changed to use a timer)
+C:\> shutdown /s /t 0
+
+Restart NOW! (0 can be changed to use a timer)
+C:\> shutdown /r /t 0
+
+Abort a shutdown/restart timer
+C:\> shutdown /a
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+			Netstat
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+TCP and UDP port use and process ID
+C:\> netstat -nao
+
+Watch [port], querying every [N] seconds
+C:\> netstat -nao [N] | find [port]
+
+Dump detailed protocol stats
+C:\> netstat -s -p [tcp|udp|ip|icmp]
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+			CMD
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+Search directory structure for a [FileName] in [Directory]
+C:\> dir /b /s [Directory]\[FileName]
+
+Count lines in standard output of [Command] that are not blank (/v "")
+C:\> [Command] | find /c /v ""
+
+For loop
+C:\> for /L %i in ([start],[step],[stop]) do [Command]
+
+Iterate through file contents
+C:\> for /F %i in ([file-set]) do [Command]
+
+Get User AD groups and output to [FileName]
+C:\> whoami /groups | [FileName]
+
+Open [FileName] in Notepad
+C:\> notepad.exe [FileName]
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+			Networking
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+Turn off Windows Firewall
+C:\> netsh firewall set opmode disable
+
+Config interface "Local Area Connection" with [IPaddr] [Netmask] & [DefaultGW]
+C:\> netsh interface ip set address local static [IPaddr] [Netmask] 
+     [DefaultGW] 1
+
+Config DNS server for "Local Area Connection"
+C:\> netsh interface ip set dns local static [IPaddr]
+
+Config interface to use DHCP
+C:\> netsh interface ip set address local dhcp
+
+Display CURRENT connections
+C:\> netstat
+
+Display Domain Controller used to logon
+C:\> echo %logonserver%
+
+Display Domain Controllers for [Domain]
+C:\>nltest /dclist:[Domain]
+
+Display connections & corresponding executables
+C:\> netstat -b
+
+Show Fully Qualified DNS for foreign addresses
+C:\> netstat -f
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+			GUI-2-CMD
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+Local User Mgr				    --->	C:\> lusrmgr
+Services Control Panel		--->	C:\> services
+Task Mgr					        --->	C:\> taskmgr
+Task Scheduler				    --->	C:\> taskschd
+Security Policy Mgr			  --->	C:\> secpol
+Event Viewer				      --->	C:\> eventvwr
+Control Panel				      --->	C:\> control
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+			Powershell
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+Pull LAPS password for [MachineName]
+C:\> Get-ADComputer -Identity [MachineName] -Properties ms-Mcs-AdmPwd
+
+Pull Machine Name, OS, Distinguished Name, and LAPS Password for [MachineName]
+and export to [Directory] as [FileName].csv
+C:\> Get-ADComputer -Identity [MachineName] -Properties * | select @{Label="Name";Expression={$_.name}}, @{Label="OS";Expression={$_.operatingsystem}}, @{Label="Distinguished name";Expression={$_.'distinguishedname'}}, @{Label="Password";Expression={$_.'ms-Mcs-AdmPwd'}} | Export-Csv [Directory]\[FileName].csv -NoTypeInformation -Append
