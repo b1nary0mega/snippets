@@ -198,3 +198,29 @@ C:\> Get-ADComputer -Identity [MachineName] -Properties ms-Mcs-AdmPwd
 Pull Machine Name, OS, Distinguished Name, and LAPS Password for [MachineName]
 and export to [Directory] as [FileName].csv
 C:\> Get-ADComputer -Identity [MachineName] -Properties * | select @{Label="Name";Expression={$_.name}}, @{Label="OS";Expression={$_.operatingsystem}}, @{Label="Distinguished name";Expression={$_.'distinguishedname'}}, @{Label="Password";Expression={$_.'ms-Mcs-AdmPwd'}} | Export-Csv [Directory]\[FileName].csv -NoTypeInformation -Append
+
+Computer Info
+C:\> get-wmiobject -query "SELECT * FROM Win32_ComputerSystem" | select-object Name,Domain,Description,Manufacturer,Model,NumberOfProcessors,TotalPhysicalMemory,SystemType,PrimaryOwnerName,UserName
+
+Bios Info
+C:\> get-wmiobject -query "SELECT * FROM Win32_BIOS" | select-object Name,Version,SMBIOSBIOSVersion
+
+CPU Info
+C:\> get-wmiobject -query "SELECT * FROM Win32_Processor" | select-object Manufacturer,Name,CurrentClockSpeed,L2CacheSize
+
+OS Info
+C:\> get-wmiobject -query "SELECT * FROM Win32_OperatingSystem" | select-object Caption,BuildNumber,Version,SerialNumber,ServicePackMajorVersion,InstallDate
+
+Name of Built-In Admin Account (even if renamed)
+C:\> get-wmiobject -query "SELECT * FROM Win32_UserAccount" | where-object {$_.SID -match '-500$'} | select-object Name
+
+List Installed HFs
+C:\> get-wmiobject -query "SELECT * FROM Win32_QuickFixEngineering" | select-object HotFixID
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+			Troubleshooting
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+Review all Windows stored credentials
+C:\> rundll32.exe keymgr.dll, KRShowKeyMgr
