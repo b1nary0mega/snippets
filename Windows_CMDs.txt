@@ -174,6 +174,19 @@ C:\> netstat -b
 Show Fully Qualified DNS for foreign addresses
 C:\> netstat -f
 
+Resetting TCP & Winsock as well as re-register all DLL files in Sys32, then restart immediately
+ (must be run w/Admin. privs)
+C:\> CD  C:\Windows\System32
+C:\> netsh i i r r (or netsh int ip reset log.txt to Clear TCP/IP Stack)
+C:\> NETSH Winsock Reset Catalog (or netsh w r c to Reset Winsock Catalog)
+C:\> ipconfig /flushdns (Flush DNS Resolver Cache)
+C:\> ipconfig /registerdns (Re-register DNS)
+C:\> For %1 in (*DLL) do REGSVR32 %1 -s (Entered at C:\Windows\System32 prompt to Re-register all System32 DLLs)
+C:\> shutdown /r /t 0
+
+Ping google.com, displaying name, for 100 packest of a 1000 bytes
+C:\> ping -a -n 100 -l 1000 google.com
+
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 			GUI-2-CMD
